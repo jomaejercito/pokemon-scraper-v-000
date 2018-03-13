@@ -8,7 +8,7 @@ class Pokemon
     @id = id
     @name = name
     @type = type
-    @hp = hp
+    @hp = hp unless hp == nil
     @db = db
     @@all << self
   end
@@ -26,13 +26,13 @@ class Pokemon
 
 
   def self.find(id, db)
-    pokemon = db.execute("SELECT * FROM pokemon WHERE id = ?", id).flatten
-    Pokemon.new(id: pokemon[0], name: pokemon[1], type: pokemon[2], hp: pokemon[3] , db: db)
+    pokemon = db.execute("SELECT * FROM pokemon WHERE id = ?", [id]).first
+    self.new(id: pokemon[0], name: pokemon[1], type: pokemon[2], hp: pokemon[3] , db: db)
   end
 
 
   def alter_hp(new_hp, db)
-    db.execute("UPDATE pokemon SET hp = ? WHERE name = ?", new_hp, self.id)
+    db.execute("UPDATE pokemon SET hp = ? WHERE name = ?", [new_hp, self.id])
   end
 
 end
